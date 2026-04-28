@@ -123,6 +123,7 @@ class GistKeepApp {
     this.bookmarkletPanels = new Map();
     this.config = null;
     this.gistmark = null;
+    this.appVersion = "0.1.0";
     this.currentCategory = null;
     this.currentView = "bookmarks";
     this.searchQuery = "";
@@ -238,6 +239,7 @@ class GistKeepApp {
       themeOptions: document.getElementById("themeOptions"),
       encryptContentSection: document.getElementById("encryptContentSection"),
       encryptContentSetting: document.getElementById("encryptContentSetting"),
+      settingsVersion: document.getElementById("settingsVersion"),
     };
 
     this.initializeBookmarkletPanels();
@@ -2346,6 +2348,7 @@ class GistKeepApp {
   initializeSettingsModal() {
     this.updateThemeOptions();
     this.updateSettingsSecuritySections();
+    this.renderAppVersion();
 
     // Load current timeout setting
     const timeoutMs = Storage.get(this.authTimeoutKey) || 0;
@@ -2362,6 +2365,14 @@ class GistKeepApp {
     if (this.elements.settingsEncryptionKey) {
       this.elements.settingsEncryptionKey.value = "";
     }
+  }
+
+  renderAppVersion() {
+    if (!this.elements.settingsVersion) return;
+
+    this.elements.settingsVersion.textContent = this.appVersion
+      ? `Version ${this.appVersion}`
+      : "Version";
   }
 
   updateSettingsSecuritySections() {

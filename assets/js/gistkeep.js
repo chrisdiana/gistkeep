@@ -850,7 +850,7 @@ class GistKeep {
 ${this.separator}
 
 ## Getting Started
-* [GistKeep Documentation](https://github.com/your-repo/gistkeep)
+* [GistKeep](https://gistkeep.com)
 * [GitHub Gists](https://gist.github.com)
 `;
     const initialNotes = this.getDefaultNotesContent();

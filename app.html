@@ -1,0 +1,1397 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>GistKeep</title>
+        <meta
+            name="description"
+            content="GistKeep is an open source, bookmark and notes manager that uses Github Gist as it's backend and database."
+        />
+        <meta property="og:title" content="GistKeep" />
+        <meta
+            property="og:description"
+            content="Portable bookmarks & notes, stored in Markdown, backed by your own GitHub Gist."
+        />
+        <meta property="og:type" content="website" />
+        <meta
+            property="og:url"
+            content="https://chrisdiana.github.io/gistkeep/app.html"
+        />
+        <meta
+            property="og:image"
+            content="https://chrisdiana.github.io/gistkeep/assets/img/gistkeep-og.png"
+        />
+        <meta
+            property="og:image:alt"
+            content="GistKeep interface preview showing gist-backed bookmark management"
+        />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="GistKeep" />
+        <meta
+            name="twitter:description"
+            content="Portable bookmarks & notes, stored in Markdown, backed by your own GitHub Gist."
+        />
+        <meta
+            name="twitter:image"
+            content="https://chrisdiana.github.io/gistkeep/assets/img/gistkeep-og.png"
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+            rel="stylesheet"
+        />
+
+        <link rel="icon" type="image/png" href="/assets/img/favicon/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/svg+xml" href="/assets/img/favicon/favicon.svg" />
+        <link rel="shortcut icon" href="/assets/img/favicon/favicon.ico" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicon/apple-touch-icon.png" />
+        <meta name="apple-mobile-web-app-title" content="GistKeep" />
+        <link rel="manifest" href="/assets/img/favicon/site.webmanifest" />
+        <link rel="stylesheet" href="./assets/css/app.css" />
+    </head>
+    <body>
+        <div class="app">
+            <!-- Welcome/Setup Screen -->
+            <div id="welcomeScreen" class="welcome-screen">
+                <div class="welcome-card">
+                    <div class="welcome-header">
+                        <div class="welcome-logo" aria-hidden="true">
+                            <img src="./assets/img/icon.png" alt="" />
+                        </div>
+                        <h1 class="welcome-title">GistKeep</h1>
+                        <p class="welcome-subtitle">
+                            Bookmark & Notes powered by GitHub Gists
+                        </p>
+                    </div>
+
+                    <form id="setupForm">
+                        <div class="form-group">
+                            <label class="form-label" for="githubUsername"
+                                >GitHub Username or Gist ID</label
+                            >
+                            <input
+                                type="text"
+                                id="githubUsername"
+                                class="form-input"
+                                placeholder="your-username or existing gist ID"
+                                required
+                            />
+                            <div class="form-help">
+                                If you already have a GistKeep gist, enter its
+                                ID here otherwise enter your GitHub username and
+                                GistKeep will create one for you.
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="githubToken"
+                                >GitHub Personal Access Token</label
+                            >
+                            <input
+                                type="password"
+                                id="githubToken"
+                                class="form-input"
+                                placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
+                                required
+                            />
+                            <div class="form-help">
+                                Create a token at
+                                <a
+                                    href="https://github.com/settings/tokens"
+                                    target="_blank"
+                                    >GitHub Settings</a
+                                >
+                                with 'gist' scope
+                            </div>
+                        </div>
+
+                        <details
+                            style="
+                                margin-bottom: 1.5rem;
+                                background: var(--bg-secondary);
+                                border: 1px solid var(--border-light);
+                                border-radius: 10px;
+                                padding: 0.9rem 1rem;
+                            "
+                        >
+                            <summary
+                                style="
+                                    cursor: pointer;
+                                    font-size: 0.875rem;
+                                    font-weight: 600;
+                                    color: var(--text-primary);
+                                "
+                            >
+                                Encryption options
+                            </summary>
+                            <p
+                                style="
+                                    margin: 0.75rem 0 1rem 0;
+                                    font-size: 0.8125rem;
+                                    color: var(--text-secondary);
+                                "
+                            >
+                                Optional, but recommended if you want local
+                                token encryption or encrypted bookmark content.
+                            </p>
+
+                            <div class="form-group" style="margin-bottom: 1rem">
+                                <label class="form-label" for="encryptionKey"
+                                    >Encryption Key (Optional)</label
+                                >
+                                <input
+                                    type="password"
+                                    id="encryptionKey"
+                                    class="form-input"
+                                    placeholder="Enter a secure encryption key"
+                                />
+                                <div class="form-help">
+                                    If provided, your GitHub token is encrypted
+                                    locally in this browser.
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom: 0">
+                                <label class="form-label">
+                                    <input
+                                        type="checkbox"
+                                        id="encryptContent"
+                                        style="margin-right: 0.5rem"
+                                    />
+                                    Encrypt bookmark content
+                                </label>
+                                <div class="form-help">
+                                    Encrypt your bookmark data in the gist using
+                                    your encryption key for extra security.
+                                    Note: This will make the gist content
+                                    unreadable on GitHub.
+                                </div>
+                            </div>
+                        </details>
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                            style="width: 100%"
+                        >
+                            <span class="icon icon-bookmark"></span>
+                            Setup GistKeep
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Main App -->
+            <div id="mainApp" class="main-app hidden">
+                <!-- Sidebar -->
+                <aside class="sidebar" id="sidebar">
+                    <div class="header sidebar-header">
+                        <div class="logo">
+                            <button
+                                type="button"
+                                class="logo-btn"
+                                id="logoGistLink"
+                                aria-label="Open gist on GitHub"
+                                title="Open gist on GitHub"
+                            >
+                                <div class="logo-icon">
+                                    <img
+                                        src="./assets/img/icon.png"
+                                        alt=""
+                                        aria-hidden="true"
+                                    />
+                                </div>
+                            </button>
+                        </div>
+                        <div class="view-switcher">
+                            <button
+                                class="btn btn-secondary view-switcher-btn"
+                                id="bookmarksViewBtn"
+                                type="button"
+                            >
+                                Bookmarks
+                            </button>
+                            <button
+                                class="btn btn-secondary view-switcher-btn"
+                                id="notesViewBtn"
+                                type="button"
+                            >
+                                Notes
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="categories-section">
+                        <div class="sidebar-section-header">
+                            <h3>Lists</h3>
+                        </div>
+                        <div class="category-list" id="categoryList">
+                            <!-- Lists will be populated here -->
+                        </div>
+                    </div>
+
+                    <div
+                        class="notes-sidebar-section hidden"
+                        id="notesSidebarSection"
+                    >
+                        <div class="notes-sidebar-list" id="notesSidebarList">
+                            <!-- Notes will be populated here -->
+                        </div>
+                    </div>
+
+                    <div class="tags-section">
+                        <div
+                            class="sidebar-section-header collapsible-header"
+                            id="tagsHeader"
+                        >
+                            <div
+                                style="
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 0.5rem;
+                                "
+                            >
+                                <h3>Tags</h3>
+                                <button
+                                    class="btn btn-ghost btn-sm"
+                                    id="clearTagFilters"
+                                    title="Clear all tag filters"
+                                    style="display: none"
+                                >
+                                    <span class="icon icon-close"></span>
+                                </button>
+                            </div>
+                            <span class="collapse-icon" id="tagsCollapseIcon"
+                                >▼</span
+                            >
+                        </div>
+                        <div class="tag-list collapsible-content" id="tagList">
+                            <!-- Tags will be populated here -->
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Main Content -->
+                <main class="main-content">
+                    <div class="header">
+                        <div class="header-actions">
+                            <button class="btn btn-ghost" id="sidebarToggle">
+                                <span class="icon icon-menu"></span>
+                            </button>
+
+                            <div class="search-container">
+                                <input
+                                    type="text"
+                                    class="search-input"
+                                    id="searchInput"
+                                    placeholder="Search bookmarks..."
+                                />
+                                <span
+                                    class="search-icon icon icon-search"
+                                ></span>
+                            </div>
+                        </div>
+
+                        <div class="header-actions">
+                            <button
+                                class="btn btn-ghost"
+                                id="settingsBtn"
+                                title="Settings"
+                                aria-label="Settings"
+                            >
+                                <span class="icon icon-settings"></span>
+                            </button>
+                            <button class="btn btn-primary" id="addBookmarkBtn">
+                                <span class="icon icon-plus"></span>
+                                <span class="btn-text" id="primaryActionLabel"
+                                    >Add Bookmark</span
+                                >
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="content-area">
+                        <div class="content-header" id="contentHeader">
+                            <h2 class="content-title" id="contentTitle">
+                                All Bookmarks
+                            </h2>
+                            <div class="content-header-actions">
+                                <button
+                                    class="category-edit-btn hidden"
+                                    id="editCategoryBtn"
+                                    title="Edit list"
+                                    aria-label="Edit list"
+                                >
+                                    <span class="icon icon-edit"></span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="bookmark-list" id="bookmarkList">
+                            <!-- Bookmarks will be populated here -->
+                            <div class="empty-state">
+                                <div class="empty-state-icon">🔖</div>
+                                <h3 class="empty-state-title">
+                                    No bookmarks yet
+                                </h3>
+                                <p class="empty-state-description">
+                                    Add your first bookmark to get started!
+                                </p>
+                                <button
+                                    class="btn btn-primary"
+                                    onclick="
+                                        document
+                                            .getElementById('addBookmarkBtn')
+                                            .click()
+                                    "
+                                >
+                                    <span class="icon icon-plus"></span>
+                                    Add Your First Bookmark
+                                </button>
+                            </div>
+                        </div>
+
+                        <div
+                            class="notes-detail-pane hidden"
+                            id="noteDetailPane"
+                        >
+                            <!-- Selected note details render here -->
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+
+        <div id="addNoteModal" class="modal-overlay hidden">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3 class="modal-title">Add Note</h3>
+                    <button class="btn btn-ghost" id="closeAddNoteModal">
+                        <span class="icon icon-close"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addNoteForm">
+                        <div class="form-group">
+                            <label class="form-label" for="noteContent"
+                                >Note</label
+                            >
+                            <textarea
+                                id="noteContent"
+                                class="form-input"
+                                rows="8"
+                                placeholder="Write a short note..."
+                            ></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="noteTags"
+                                >Tags (optional)</label
+                            >
+                            <input
+                                type="text"
+                                id="noteTags"
+                                class="form-input"
+                                placeholder="ideas, writing, todo"
+                            />
+                        </div>
+
+                        <div
+                            style="
+                                display: flex;
+                                gap: 0.75rem;
+                                justify-content: flex-end;
+                            "
+                        >
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                id="cancelAddNote"
+                            >
+                                Cancel
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                Save Note
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="editNoteModal" class="modal-overlay hidden">
+            <div class="modal modal-lg">
+                <div class="modal-header">
+                    <h3 class="modal-title">Edit Note</h3>
+                    <button class="btn btn-ghost" id="closeEditNoteModal">
+                        <span class="icon icon-close"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editNoteForm">
+                        <div class="form-group">
+                            <textarea
+                                id="editNoteContent"
+                                class="form-input"
+                                rows="8"
+                                placeholder="Write a short note..."
+                            ></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="editNoteTags"
+                                >Tags (optional)</label
+                            >
+                            <input
+                                type="text"
+                                id="editNoteTags"
+                                class="form-input"
+                                placeholder="ideas, writing, todo"
+                            />
+                        </div>
+
+                        <div
+                            style="
+                                display: flex;
+                                gap: 0.75rem;
+                                justify-content: space-between;
+                            "
+                        >
+                            <button
+                                type="button"
+                                class="btn btn-danger"
+                                id="deleteNoteBtn"
+                            >
+                                Delete Note
+                            </button>
+                            <div
+                                style="
+                                    display: flex;
+                                    gap: 0.75rem;
+                                    justify-content: flex-end;
+                                "
+                            >
+                                <button
+                                    type="button"
+                                    class="btn btn-secondary"
+                                    id="cancelEditNote"
+                                >
+                                    Cancel
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    Save Changes
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="viewNoteModal" class="modal-overlay hidden">
+            <div class="modal modal-lg">
+                <div class="modal-header">
+                    <button class="btn btn-ghost" id="closeViewNoteModal">
+                        <span class="icon icon-close"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="form-help" id="viewNoteMeta"></div>
+                    </div>
+
+                    <div class="note-read-content" id="viewNoteContent"></div>
+
+                    <div
+                        style="
+                            display: flex;
+                            gap: 0.75rem;
+                            justify-content: space-between;
+                            margin-top: 1.5rem;
+                        "
+                    >
+                        <button
+                            type="button"
+                            class="btn btn-danger"
+                            id="deleteViewedNoteBtn"
+                        >
+                            Delete Note
+                        </button>
+                        <div
+                            style="
+                                display: flex;
+                                gap: 0.75rem;
+                                justify-content: flex-end;
+                            "
+                        >
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                id="editViewedNoteBtn"
+                            >
+                                Edit Note
+                            </button>
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                id="closeViewNote"
+                            >
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Bookmark Modal -->
+        <div id="addBookmarkModal" class="modal-overlay hidden">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3 class="modal-title">Add New Bookmark</h3>
+                    <button class="btn btn-ghost" id="closeAddBookmarkModal">
+                        <span class="icon icon-close"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addBookmarkForm">
+                        <div class="form-group">
+                            <label class="form-label" for="bookmarkTitle"
+                                >Title</label
+                            >
+                            <input
+                                type="text"
+                                id="bookmarkTitle"
+                                class="form-input"
+                                placeholder="Bookmark title"
+                                required
+                            />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="bookmarkUrl"
+                                >URL</label
+                            >
+                            <input
+                                type="url"
+                                id="bookmarkUrl"
+                                class="form-input"
+                                placeholder="https://example.com"
+                                required
+                            />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="bookmarkCategory"
+                                >List</label
+                            >
+                            <select
+                                id="bookmarkCategory"
+                                class="form-input"
+                                required
+                            >
+                                <option value="">Select a list</option>
+                                <option value="__CREATE_NEW__">
+                                    + Create New List
+                                </option>
+                            </select>
+                        </div>
+
+                        <div
+                            class="form-group"
+                            id="newCategoryGroup"
+                            style="display: none"
+                        >
+                            <label class="form-label" for="newCategoryName"
+                                >New List Name</label
+                            >
+                            <input
+                                type="text"
+                                id="newCategoryName"
+                                class="form-input"
+                                placeholder="Enter list name"
+                            />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="bookmarkTags"
+                                >Tags (optional)</label
+                            >
+                            <input
+                                type="text"
+                                id="bookmarkTags"
+                                class="form-input"
+                                placeholder="web, development, tutorial (comma separated)"
+                            />
+                            <div class="form-help">
+                                Enter tags separated by commas. Tags help
+                                organize and search your bookmarks.
+                            </div>
+                        </div>
+
+                        <div
+                            style="
+                                display: flex;
+                                gap: 0.75rem;
+                                justify-content: flex-end;
+                            "
+                        >
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                id="cancelAddBookmark"
+                            >
+                                Cancel
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                Save Bookmark
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Bookmark Modal -->
+        <div id="editBookmarkModal" class="modal-overlay hidden">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3 class="modal-title">Edit Bookmark</h3>
+                    <button class="btn btn-ghost" id="closeEditBookmarkModal">
+                        <span class="icon icon-close"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editBookmarkForm">
+                        <div class="form-group">
+                            <label class="form-label" for="editBookmarkTitle"
+                                >Title</label
+                            >
+                            <input
+                                type="text"
+                                id="editBookmarkTitle"
+                                class="form-input"
+                                placeholder="Bookmark title"
+                                required
+                            />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="editBookmarkUrl"
+                                >URL</label
+                            >
+                            <input
+                                type="url"
+                                id="editBookmarkUrl"
+                                class="form-input"
+                                placeholder="https://example.com"
+                                required
+                            />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="editBookmarkCategory"
+                                >List</label
+                            >
+                            <select
+                                id="editBookmarkCategory"
+                                class="form-input"
+                                required
+                            >
+                                <option value="">Select a list</option>
+                                <option value="__CREATE_NEW__">
+                                    + Create New List
+                                </option>
+                            </select>
+                        </div>
+
+                        <div
+                            class="form-group"
+                            id="editNewCategoryGroup"
+                            style="display: none"
+                        >
+                            <label class="form-label" for="editNewCategoryName"
+                                >New List Name</label
+                            >
+                            <input
+                                type="text"
+                                id="editNewCategoryName"
+                                class="form-input"
+                                placeholder="Enter list name"
+                            />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="editBookmarkTags"
+                                >Tags (optional)</label
+                            >
+                            <input
+                                type="text"
+                                id="editBookmarkTags"
+                                class="form-input"
+                                placeholder="web, development, tutorial (comma separated)"
+                            />
+                            <div class="form-help">
+                                Enter tags separated by commas. Tags help
+                                organize and search your bookmarks.
+                            </div>
+                        </div>
+
+                        <div
+                            style="
+                                display: flex;
+                                gap: 0.75rem;
+                                justify-content: flex-end;
+                            "
+                        >
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                id="cancelEditBookmark"
+                            >
+                                Cancel
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                Update Bookmark
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Modal -->
+        <div id="settingsModal" class="modal-overlay hidden">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3 class="modal-title">Settings</h3>
+                    <button class="btn btn-ghost" id="closeSettingsModal">
+                        <span class="icon icon-close"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div
+                            id="settingsBookmarkletHost"
+                            data-bookmarklet-panel="settings"
+                            data-bookmarklet-label="Bookmarklet"
+                            data-bookmarklet-intro="The GistKeep bookmarklet lets you save bookmarks from any website."
+                        ></div>
+                    </div>
+
+                    <div class="form-group">
+                        <button
+                            class="btn btn-secondary"
+                            id="viewGistBtn"
+                            style="width: 100%"
+                        >
+                            <span class="icon icon-external"></span>
+                            View Gist on GitHub
+                        </button>
+                    </div>
+
+                    <div
+                        class="form-group"
+                        style="
+                            padding-top: 1rem;
+                            border-top: 1px solid var(--border-color);
+                        "
+                    >
+                        <label class="form-label">Theme</label>
+                        <p
+                            style="
+                                font-size: 0.875rem;
+                                color: var(--text-secondary);
+                                margin-bottom: 0.75rem;
+                            "
+                        >
+                            Choose the visual style for the app.
+                        </p>
+                        <div class="theme-grid" id="themeOptions">
+                            <button
+                                type="button"
+                                class="theme-option"
+                                data-theme-option="light"
+                            >
+                                <div class="theme-swatch">
+                                    <span style="background: #ffffff"></span>
+                                    <span style="background: #f8fafc"></span>
+                                    <span style="background: #3b82f6"></span>
+                                    <span style="background: #0f172a"></span>
+                                </div>
+                                <span class="theme-option-name">Sky Light</span>
+                                <span class="theme-option-meta"
+                                    >Bright default</span
+                                >
+                            </button>
+                            <button
+                                type="button"
+                                class="theme-option"
+                                data-theme-option="midnight"
+                            >
+                                <div class="theme-swatch">
+                                    <span style="background: #1e293b"></span>
+                                    <span style="background: #0f172a"></span>
+                                    <span style="background: #3b82f6"></span>
+                                    <span style="background: #f8fafc"></span>
+                                </div>
+                                <span class="theme-option-name">Midnight</span>
+                                <span class="theme-option-meta"
+                                    >Deep blue dark</span
+                                >
+                            </button>
+                            <button
+                                type="button"
+                                class="theme-option"
+                                data-theme-option="paper"
+                            >
+                                <div class="theme-swatch">
+                                    <span style="background: #fffdf8"></span>
+                                    <span style="background: #f8f3e8"></span>
+                                    <span style="background: #b45309"></span>
+                                    <span style="background: #2f2417"></span>
+                                </div>
+                                <span class="theme-option-name">Paper</span>
+                                <span class="theme-option-meta"
+                                    >Warm editorial light</span
+                                >
+                            </button>
+                            <button
+                                type="button"
+                                class="theme-option"
+                                data-theme-option="dawn"
+                            >
+                                <div class="theme-swatch">
+                                    <span style="background: #fff8fb"></span>
+                                    <span style="background: #fdf0f5"></span>
+                                    <span style="background: #db2777"></span>
+                                    <span style="background: #3d1d2e"></span>
+                                </div>
+                                <span class="theme-option-name">Dawn</span>
+                                <span class="theme-option-meta"
+                                    >Soft rose light</span
+                                >
+                            </button>
+                            <button
+                                type="button"
+                                class="theme-option"
+                                data-theme-option="grove"
+                            >
+                                <div class="theme-swatch">
+                                    <span style="background: #16261f"></span>
+                                    <span style="background: #0d1713"></span>
+                                    <span style="background: #22c55e"></span>
+                                    <span style="background: #e8f5ee"></span>
+                                </div>
+                                <span class="theme-option-name">Grove</span>
+                                <span class="theme-option-meta"
+                                    >Forest dark</span
+                                >
+                            </button>
+                            <button
+                                type="button"
+                                class="theme-option"
+                                data-theme-option="ember"
+                            >
+                                <div class="theme-swatch">
+                                    <span style="background: #251813"></span>
+                                    <span style="background: #140d0a"></span>
+                                    <span style="background: #f97316"></span>
+                                    <span style="background: #fef1e8"></span>
+                                </div>
+                                <span class="theme-option-name">Ember</span>
+                                <span class="theme-option-meta"
+                                    >Copper dark</span
+                                >
+                            </button>
+                            <button
+                                type="button"
+                                class="theme-option"
+                                data-theme-option="terminal-light"
+                            >
+                                <div class="theme-swatch">
+                                    <span style="background: #f7f7f2"></span>
+                                    <span style="background: #ececdf"></span>
+                                    <span style="background: #2563eb"></span>
+                                    <span style="background: #111827"></span>
+                                </div>
+                                <span class="theme-option-name"
+                                    >Terminal Light</span
+                                >
+                                <span class="theme-option-meta"
+                                    >Monospace CLI light</span
+                                >
+                            </button>
+                            <button
+                                type="button"
+                                class="theme-option"
+                                data-theme-option="terminal-dark"
+                            >
+                                <div class="theme-swatch">
+                                    <span style="background: #101510"></span>
+                                    <span style="background: #090d09"></span>
+                                    <span style="background: #22c55e"></span>
+                                    <span style="background: #d9f99d"></span>
+                                </div>
+                                <span class="theme-option-name"
+                                    >Terminal Dark</span
+                                >
+                                <span class="theme-option-meta"
+                                    >Monospace CLI dark</span
+                                >
+                            </button>
+                            <button
+                                type="button"
+                                class="theme-option"
+                                data-theme-option="terminal-solarized"
+                            >
+                                <div class="theme-swatch">
+                                    <span style="background: #073642"></span>
+                                    <span style="background: #002b36"></span>
+                                    <span style="background: #2aa198"></span>
+                                    <span style="background: #fdf6e3"></span>
+                                </div>
+                                <span class="theme-option-name"
+                                    >Terminal Solarized</span
+                                >
+                                <span class="theme-option-meta"
+                                    >Monospace solarized dark</span
+                                >
+                            </button>
+                            <button
+                                type="button"
+                                class="theme-option"
+                                data-theme-option="terminal-ink"
+                            >
+                                <div class="theme-swatch">
+                                    <span style="background: #111111"></span>
+                                    <span style="background: #050505"></span>
+                                    <span style="background: #ffffff"></span>
+                                    <span style="background: #f5f5f5"></span>
+                                </div>
+                                <span class="theme-option-name"
+                                    >Terminal Ink</span
+                                >
+                                <span class="theme-option-meta"
+                                    >Black and white terminal</span
+                                >
+                            </button>
+                        </div>
+                    </div>
+
+                    <div
+                        class="form-group"
+                        style="
+                            padding-top: 1rem;
+                            border-top: 1px solid var(--border-color);
+                        "
+                        id="tokenProtectionSection"
+                    >
+                        <label class="form-label" for="settingsEncryptionKey"
+                            >Add Encryption Key</label
+                        >
+                        <p
+                            style="
+                                font-size: 0.875rem;
+                                color: var(--text-secondary);
+                                margin-bottom: 0.75rem;
+                            "
+                        >
+                            Your token is currently stored unencrypted on this
+                            browser. Add an encryption key to protect it and
+                            unlock session timeout and content encryption
+                            controls.
+                        </p>
+                        <input
+                            type="password"
+                            id="settingsEncryptionKey"
+                            class="form-input"
+                            placeholder="Enter a new encryption key"
+                        />
+                        <div class="form-help">
+                            Only do this on a browser you trust. You will use
+                            this key for future authenticated sessions.
+                        </div>
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            id="saveEncryptionKeyBtn"
+                            style="width: 100%; margin-top: 0.75rem"
+                        >
+                            Protect Token with Encryption
+                        </button>
+                    </div>
+
+                    <div
+                        class="form-group"
+                        style="
+                            padding-top: 1rem;
+                            border-top: 1px solid var(--border-color);
+                        "
+                        id="authTimeoutSection"
+                    >
+                        <label class="form-label">Password Timeout</label>
+                        <p
+                            style="
+                                font-size: 0.875rem;
+                                color: var(--text-secondary);
+                                margin-bottom: 0.75rem;
+                            "
+                        >
+                            How long to keep your password in memory before
+                            requiring re-authentication.
+                        </p>
+                        <select id="authTimeout" class="form-input">
+                            <option value="0">Always ask (no timeout)</option>
+                            <option value="300000">5 minutes</option>
+                            <option value="900000">15 minutes</option>
+                            <option value="1800000">30 minutes</option>
+                            <option value="3600000">1 hour</option>
+                            <option value="14400000">4 hours</option>
+                        </select>
+                    </div>
+
+                    <div
+                        class="form-group"
+                        style="
+                            padding-top: 1rem;
+                            border-top: 1px solid var(--border-color);
+                        "
+                        id="encryptContentSection"
+                    >
+                        <label class="form-label">
+                            <input
+                                type="checkbox"
+                                id="encryptContentSetting"
+                                style="margin-right: 0.5rem"
+                            />
+                            Encrypt bookmark content
+                        </label>
+                        <p
+                            style="
+                                font-size: 0.875rem;
+                                color: var(--text-secondary);
+                                margin-bottom: 0.75rem;
+                            "
+                        >
+                            Encrypt your bookmark data in the gist using your
+                            encryption key for extra security.
+                            <strong>Warning:</strong> Changing this setting will
+                            require re-encrypting all existing bookmarks.
+                        </p>
+                    </div>
+
+                    <div
+                        class="form-group"
+                        style="
+                            padding-top: 1rem;
+                            border-top: 1px solid var(--border-color);
+                        "
+                    >
+                        <button
+                            class="btn"
+                            style="
+                                background: var(--danger-color);
+                                color: white;
+                                width: 100%;
+                            "
+                            id="resetConfigBtn"
+                        >
+                            Reset Configuration
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="welcomeModal" class="modal-overlay hidden welcome-modal">
+            <div class="modal modal-lg">
+                <div class="modal-header">
+                    <h3 class="modal-title">Welcome to GistKeep</h3>
+                    <button class="btn btn-ghost" id="closeWelcomeModal">
+                        <span class="icon icon-close"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="welcome-modal-note">
+                        The GistKeep bookmarklet lets you save bookmarks from
+                        any website. To install, follow the instructions below.
+                    </p>
+                    <div
+                        id="welcomeBookmarkletHost"
+                        data-bookmarklet-panel="welcome"
+                        data-bookmarklet-intro=""
+                    ></div>
+                    <button
+                        type="button"
+                        class="btn btn-primary welcome-modal-cta"
+                        id="dismissWelcomeModal"
+                        style="width: 100%; margin-top: 1.25rem"
+                    >
+                        <span class="icon icon-star"></span>
+                        Start Using GistKeep
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <template id="bookmarkletPanelTemplate">
+            <div class="bookmarklet-panel">
+                <label
+                    class="bookmarklet-panel-label"
+                    data-bookmarklet-label
+                ></label>
+                <p class="bookmarklet-panel-intro" data-bookmarklet-intro></p>
+
+                <details>
+                    <summary>📖 Installation & Usage Instructions</summary>
+
+                    <div class="bookmarklet-guide">
+                        <h4>Installation Instructions:</h4>
+
+                        <div style="margin-bottom: 1rem">
+                            <strong
+                                >Method 1: Right-click to bookmark
+                                (Recommended)</strong
+                            >
+                            <ol>
+                                <li>
+                                    Right-click the "Save to GistKeep" button
+                                    below
+                                </li>
+                                <li>
+                                    Select "Add to bookmarks" or "Bookmark this
+                                    link"
+                                </li>
+                                <li>
+                                    Choose where to save it (bookmarks bar
+                                    recommended)
+                                </li>
+                            </ol>
+                        </div>
+
+                        <div style="margin-bottom: 1rem">
+                            <strong>Method 2: Drag and drop</strong>
+                            <ol>
+                                <li>
+                                    Drag the "Save to GistKeep" button to your
+                                    bookmarks bar
+                                </li>
+                                <li>Drop it where you want it to appear</li>
+                            </ol>
+                        </div>
+
+                        <div>
+                            <strong
+                                >Method 3: Copy and create manually
+                                (iOS/Android)</strong
+                            >
+                            <ol>
+                                <li>
+                                    Click the copy button to copy the
+                                    bookmarklet code
+                                </li>
+                                <li>Create a new bookmark in your browser</li>
+                                <li>Paste the code as the URL/location</li>
+                                <li>Name it "Save to GistKeep"</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="bookmarklet-guide bookmarklet-guide-secondary">
+                        <h4>How to use:</h4>
+                        <ol class="bookmarklet-usage">
+                            <li>Visit any website you want to bookmark</li>
+                            <li>
+                                Click the "Save to GistKeep" bookmark you
+                                created
+                            </li>
+                            <li>Choose a list from the dropdown</li>
+                            <li>
+                                Click "Save Bookmark" to add it to your
+                                collection
+                            </li>
+                        </ol>
+                        <p class="bookmarklet-tip">
+                            💡 Tip: Keep the bookmarklet in your bookmarks bar
+                            for quick access on any site!
+                        </p>
+                    </div>
+                </details>
+
+                <div class="bookmarklet-actions">
+                    <a
+                        class="btn btn-primary bookmarklet-link"
+                        data-bookmarklet-link
+                    >
+                        <span class="icon icon-bookmark"></span>
+                        Save to GistKeep
+                    </a>
+                    <button
+                        type="button"
+                        class="btn btn-ghost"
+                        data-bookmarklet-copy-btn
+                        title="Copy bookmarklet code"
+                        aria-label="Copy bookmarklet code"
+                    >
+                        <span class="icon icon-copy"></span>
+                        Copy code
+                    </button>
+                </div>
+
+                <details class="bookmarklet-code-toggle">
+                    <summary>Show bookmarklet code</summary>
+                    <textarea
+                        class="form-input"
+                        rows="4"
+                        readonly
+                        data-bookmarklet-code
+                    ></textarea>
+                </details>
+            </div>
+        </template>
+
+        <!-- Edit List Modal -->
+        <div id="editCategoryModal" class="modal-overlay hidden">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3 class="modal-title">Edit List</h3>
+                    <button class="btn btn-ghost" id="closeEditCategoryModal">
+                        <span class="icon icon-close"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">Current List</label>
+                        <div
+                            id="editCategoryCurrentName"
+                            class="form-input"
+                            style="
+                                display: flex;
+                                align-items: center;
+                                min-height: 44px;
+                                background: var(--bg-secondary);
+                            "
+                        ></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="editCategoryName"
+                            >Rename List</label
+                        >
+                        <input
+                            type="text"
+                            id="editCategoryName"
+                            class="form-input"
+                            placeholder="Enter new list name"
+                        />
+                    </div>
+
+                    <div
+                        class="form-group"
+                        style="
+                            padding-top: 1rem;
+                            border-top: 1px solid var(--border-color);
+                        "
+                    >
+                        <label
+                            class="form-label"
+                            for="deleteCategoryDestination"
+                            >Delete List</label
+                        >
+                        <p
+                            style="
+                                font-size: 0.875rem;
+                                color: var(--text-secondary);
+                                margin-bottom: 0.75rem;
+                            "
+                        >
+                            Choose where to move this list's bookmarks before
+                            deleting it.
+                        </p>
+                        <select
+                            id="deleteCategoryDestination"
+                            class="form-input"
+                        >
+                            <option value="">Select destination list</option>
+                        </select>
+                    </div>
+
+                    <div
+                        style="
+                            display: flex;
+                            gap: 0.75rem;
+                            justify-content: space-between;
+                            margin-top: 1.5rem;
+                        "
+                    >
+                        <button
+                            type="button"
+                            class="btn btn-danger"
+                            id="confirmDeleteCategory"
+                        >
+                            Delete List
+                        </button>
+                        <div
+                            style="
+                                display: flex;
+                                gap: 0.75rem;
+                                justify-content: flex-end;
+                            "
+                        >
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                id="cancelEditCategory"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="button"
+                                class="btn btn-primary"
+                                id="saveCategoryChanges"
+                            >
+                                Rename List
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div
+            id="globalActivity"
+            class="global-activity"
+            role="status"
+            aria-live="polite"
+            aria-hidden="true"
+        >
+            <span class="loading-spinner" aria-hidden="true"></span>
+            <span id="globalActivityText" class="global-activity-text"
+                >Working...</span
+            >
+        </div>
+
+        <script src="assets/js/crypto-js.min.js"></script>
+        <script src="assets/js/gistkeep.js"></script>
+        <script src="assets/js/bookmarklet.js"></script>
+        <script src="assets/js/app.js"></script>
+
+        <!-- Google tag (gtag.js) -->
+        <script
+            async
+            src="https://www.googletagmanager.com/gtag/js?id=G-X68E7YM8CT"
+        ></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+
+            gtag("config", "G-X68E7YM8CT");
+        </script>
+    </body>
+</html>

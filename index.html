@@ -1,0 +1,770 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>GistKeep | Bookmarks & Notes</title>
+        <meta
+            name="description"
+            content="GistKeep is an open source bookmark and notes manager that stores your library in your own GitHub Gist as plain Markdown, with search, categories, tags, and an optional bookmarklet."
+        />
+        <meta name="robots" content="index, follow, max-image-preview:large" />
+        <link rel="canonical" href="https://chrisdiana.github.io/gistkeep/" />
+        <meta
+            property="og:title"
+            content="GistKeep | Open Source Bookmark & Notes Manager"
+        />
+        <meta
+            property="og:description"
+            content="Store bookmarks and notes in your own GitHub Gist as plain Markdown with categories, tags, search, and an optional bookmarklet."
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="GistKeep" />
+        <meta
+            property="og:url"
+            content="https://chrisdiana.github.io/gistkeep/"
+        />
+        <meta
+            property="og:image"
+            content="https://chrisdiana.github.io/gistkeep/assets/img/gistkeep-og.png"
+        />
+        <meta
+            property="og:image:alt"
+            content="GistKeep interface preview showing gist-backed bookmark management"
+        />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+            name="twitter:title"
+            content="GistKeep | Open Source Bookmark & Notes Manager"
+        />
+        <meta
+            name="twitter:description"
+            content="Store bookmarks and notes in your own GitHub Gist as plain Markdown with categories, tags, search, and an optional bookmarklet."
+        />
+        <meta
+            name="twitter:image"
+            content="https://chrisdiana.github.io/gistkeep/assets/img/gistkeep-og.png"
+        />
+        <meta
+            name="twitter:image:alt"
+            content="GistKeep interface preview showing gist-backed bookmark management"
+        />
+        <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "SoftwareApplication",
+                "name": "GistKeep",
+                "applicationCategory": "BrowserApplication",
+                "operatingSystem": "Web",
+                "url": "https://chrisdiana.github.io/gistkeep/",
+                "description": "GistKeep is an open source bookmark and notes manager that stores your library in your own GitHub Gist as plain Markdown, with search, categories, tags, and an optional bookmarklet.",
+                "image": "https://chrisdiana.github.io/gistkeep/assets/img/gistkeep-og.png",
+                "screenshot": [
+                    "https://chrisdiana.github.io/gistkeep/assets/img/light.png",
+                    "https://chrisdiana.github.io/gistkeep/assets/img/dark.png"
+                ],
+                "sameAs": [
+                    "https://github.com/chrisdiana/gistkeep"
+                ],
+                "offers": {
+                    "@type": "Offer",
+                    "price": "0",
+                    "priceCurrency": "USD"
+                }
+            }
+        </script>
+        <script>
+            (function () {
+                var storedTheme = null;
+                try {
+                    storedTheme = localStorage.getItem(
+                        "gistkeep-landing-theme",
+                    );
+                } catch (e) {}
+
+                var theme = storedTheme;
+                if (!theme) {
+                    theme =
+                        window.matchMedia &&
+                        window.matchMedia("(prefers-color-scheme: dark)")
+                            .matches
+                            ? "dark"
+                            : "light";
+                }
+
+                document.documentElement.setAttribute("data-theme", theme);
+            })();
+        </script>
+
+        <link
+            rel="icon"
+            type="image/png"
+            href="/assets/img/favicon/favicon-96x96.png"
+            sizes="96x96"
+        />
+        <link
+            rel="icon"
+            type="image/svg+xml"
+            href="/assets/img/favicon/favicon.svg"
+        />
+        <link rel="shortcut icon" href="/assets/img/favicon/favicon.ico" />
+        <link
+            rel="apple-touch-icon"
+            sizes="180x180"
+            href="/assets/img/favicon/apple-touch-icon.png"
+        />
+        <meta name="apple-mobile-web-app-title" content="GistKeep" />
+        <link rel="manifest" href="/assets/img/favicon/site.webmanifest" />
+        <link rel="stylesheet" href="./assets/css/index.css" />
+    </head>
+    <body>
+        <header class="site-header">
+            <div class="page-shell nav">
+                <a class="brand" href="#top">
+                    <span class="brand-mark" aria-hidden="true">
+                        <img src="./assets/img/icon.png" alt="" />
+                    </span>
+                    <span class="brand-copy"> GistKeep </span>
+                </a>
+
+                <nav class="nav-links" aria-label="Primary">
+                    <a class="link-chip" href="#how">How it works</a>
+                    <a class="link-chip" href="#gotchas">Gotchas</a>
+                    <a
+                        class="button-secondary"
+                        href="https://github.com/chrisdiana/gistkeep"
+                        target="_blank"
+                        rel="noreferrer"
+                        >GitHub<span class="button-icon" aria-hidden="true">
+                            <i class="fa-brands fa-github"></i> </span
+                    ></a>
+                    <a class="button" href="./app.html"
+                        >Open App<span class="button-icon" aria-hidden="true">
+                            <i data-lucide="external-link"></i> </span
+                    ></a>
+                    <button
+                        class="theme-toggle"
+                        id="themeToggle"
+                        type="button"
+                        aria-label="Toggle color theme"
+                        title="Toggle color theme"
+                    >
+                        <span class="theme-toggle-label-light">◐</span>
+                        <span class="theme-toggle-label-dark">◑</span>
+                    </button>
+                </nav>
+            </div>
+        </header>
+
+        <main id="top">
+            <section class="hero">
+                <div class="page-shell hero-grid">
+                    <div class="hero-copy">
+                        <h1>
+                            Portable bookmarks & notes, backed by Github Gist
+                        </h1>
+                        <p>
+                            GistKeep is an open source, bookmark and notes
+                            manager that uses
+                            <a href="https://gist.github.com" target="_blank"
+                                >Github Gist</a
+                            >
+                            as it's backend and database. Your library lives in
+                            Markdown, which means it is portable, inspectable,
+                            versioned, shareable, and easy to back up.
+                        </p>
+                        <ul class="hero-feature-list">
+                            <li>
+                                <span
+                                    class="hero-feature-icon"
+                                    aria-hidden="true"
+                                >
+                                    <i data-lucide="database-zap"></i>
+                                </span>
+                                No app-owned backend or database
+                            </li>
+                            <li>
+                                <span
+                                    class="hero-feature-icon"
+                                    aria-hidden="true"
+                                >
+                                    <i data-lucide="file-text"></i>
+                                </span>
+                                Bookmarks and notes stored in plain Markdown
+                            </li>
+                            <li>
+                                <span
+                                    class="hero-feature-icon"
+                                    aria-hidden="true"
+                                >
+                                    <i data-lucide="link-2"></i>
+                                </span>
+                                Shareable or private-ish, depending on how you
+                                use your gist
+                            </li>
+                            <li>
+                                <span
+                                    class="hero-feature-icon"
+                                    aria-hidden="true"
+                                >
+                                    <i data-lucide="shield"></i>
+                                </span>
+                                Optional encryption when you need more privacy
+                            </li>
+                        </ul>
+                    </div>
+
+                    <aside
+                        class="hero-card hero-card-plain"
+                        aria-label="GistKeep preview"
+                    >
+                        <div class="hero-shot">
+                            <img
+                                class="hero-shot-light"
+                                src="./assets/img/light.png"
+                                alt="GistKeep interface preview in light theme"
+                                loading="eager"
+                            />
+                            <img
+                                class="hero-shot-dark"
+                                src="./assets/img/dark.png"
+                                alt="GistKeep interface preview in dark theme"
+                                loading="eager"
+                            />
+                        </div>
+                    </aside>
+                </div>
+            </section>
+            <section class="section" id="how">
+                <div class="page-shell">
+                    <div class="section-header">
+                        <h2>How it works</h2>
+                    </div>
+
+                    <div class="workflow">
+                        <article class="section-card">
+                            <span class="step-number">1</span>
+                            <h3>Set Github Settings</h3>
+                            <p>
+                                Enter your Github Username and Token to setup
+                                GistKeep.
+                            </p>
+                            <div class="workflow-shot">
+                                <img
+                                    src="./assets/img/step-1.png"
+                                    alt="GistKeep setup screen for entering GitHub settings"
+                                    loading="lazy"
+                                />
+                            </div>
+                        </article>
+
+                        <article class="section-card">
+                            <span class="step-number">2</span>
+                            <h3>Copy the bookmarklet</h3>
+                            <p>
+                                Copy the bookmarklet code or drag the link to
+                                save.
+                            </p>
+                            <div class="workflow-shot">
+                                <img
+                                    src="./assets/img/step-2.png"
+                                    alt="GistKeep interface showing bookmarks organized with categories and tags"
+                                    loading="lazy"
+                                />
+                            </div>
+                        </article>
+
+                        <article class="section-card">
+                            <span class="step-number">3</span>
+                            <h3>Save the Bookmarklet</h3>
+                            <p>
+                                Save the bookmarklet into your browser for later
+                                use.
+                            </p>
+                            <div class="workflow-shot">
+                                <img
+                                    src="./assets/img/step-3.png"
+                                    alt="GistKeep settings and gist-backed workflow options"
+                                    loading="lazy"
+                                />
+                            </div>
+                        </article>
+
+                        <article class="section-card">
+                            <span class="step-number">4</span>
+                            <h3>Bookmark!</h3>
+                            <p>
+                                Use the web app or bookmarklet to capture links.
+                            </p>
+                            <div class="workflow-shot">
+                                <img
+                                    src="./assets/img/step-4.png"
+                                    alt="GistKeep interface for managing saved bookmarks and notes"
+                                    loading="lazy"
+                                />
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="gotchas">
+                <div class="page-shell">
+                    <div class="section-header">
+                        <h2>Gotchas, security, and sharing</h2>
+                    </div>
+
+                    <div
+                        class="gotchas-tabs"
+                        role="tablist"
+                        aria-label="Gotchas"
+                    >
+                        <button
+                            class="gotcha-tab is-active"
+                            type="button"
+                            role="tab"
+                            aria-selected="true"
+                            aria-controls="gotcha-panel-unlisted"
+                            id="gotcha-tab-unlisted"
+                            data-gotcha-tab="unlisted"
+                        >
+                            <span class="gotcha-tab-icon" aria-hidden="true"
+                                ><i data-lucide="eye"></i
+                            ></span>
+                            Unlisted
+                        </button>
+                        <button
+                            class="gotcha-tab"
+                            type="button"
+                            role="tab"
+                            aria-selected="false"
+                            aria-controls="gotcha-panel-sharing"
+                            id="gotcha-tab-sharing"
+                            data-gotcha-tab="sharing"
+                            tabindex="-1"
+                        >
+                            <span class="gotcha-tab-icon" aria-hidden="true"
+                                ><i data-lucide="triangle-alert"></i
+                            ></span>
+                            Sharing
+                        </button>
+                        <button
+                            class="gotcha-tab"
+                            type="button"
+                            role="tab"
+                            aria-selected="false"
+                            aria-controls="gotcha-panel-encryption"
+                            id="gotcha-tab-encryption"
+                            data-gotcha-tab="encryption"
+                            tabindex="-1"
+                        >
+                            <span class="gotcha-tab-icon" aria-hidden="true"
+                                ><i data-lucide="shield"></i
+                            ></span>
+                            Encryption
+                        </button>
+                        <button
+                            class="gotcha-tab"
+                            type="button"
+                            role="tab"
+                            aria-selected="false"
+                            aria-controls="gotcha-panel-scale"
+                            id="gotcha-tab-scale"
+                            data-gotcha-tab="scale"
+                            tabindex="-1"
+                        >
+                            <span class="gotcha-tab-icon" aria-hidden="true"
+                                ><i data-lucide="library-big"></i
+                            ></span>
+                            Scale
+                        </button>
+                    </div>
+
+                    <div class="gotchas-panels">
+                        <article
+                            class="section-card gotcha-panel is-active"
+                            role="tabpanel"
+                            id="gotcha-panel-unlisted"
+                            aria-labelledby="gotcha-tab-unlisted"
+                        >
+                            <h3>Unlisted is not secret</h3>
+                            <p>
+                                GitHub gists can be unlisted rather than truly
+                                private. That means anyone with the link can
+                                access the gist. This is a feature for easy
+                                sharing, but it is not a security boundary. It
+                                should be treated more like a hard-to-guess URL
+                                than a private vault. If the contents matter,
+                                use encryption instead of assuming obscurity is
+                                enough.
+                            </p>
+                        </article>
+
+                        <article
+                            class="section-card gotcha-panel"
+                            role="tabpanel"
+                            id="gotcha-panel-sharing"
+                            aria-labelledby="gotcha-tab-sharing"
+                            hidden
+                        >
+                            <h3>Sharing cuts both ways</h3>
+                            <p>
+                                A shared gist gives you collaborative
+                                distribution, comments, and version control. The
+                                same mechanism means you should treat the link
+                                itself as sensitive if the bookmarks matter.
+                                This tradeoff is part of what makes gist-backed
+                                storage convenient, but it also means sharing is
+                                not something to do casually. Think about
+                                whether a given library is meant to be public,
+                                semi-private, or strictly personal.
+                            </p>
+                        </article>
+
+                        <article
+                            class="section-card gotcha-panel"
+                            role="tabpanel"
+                            id="gotcha-panel-encryption"
+                            aria-labelledby="gotcha-tab-encryption"
+                            hidden
+                        >
+                            <h3>Encryption is the stronger option</h3>
+                            <p>
+                                GistKeep can use AES encryption content for
+                                users who want better privacy. If you need
+                                actual confidentiality, that is the safer path
+                                than relying on an unlisted gist URL. It is the
+                                right choice when your notes contain personal or
+                                sensitive material. The tradeoff is that
+                                encrypted content is less convenient to inspect
+                                directly outside the app.
+                            </p>
+                        </article>
+
+                        <article
+                            class="section-card gotcha-panel"
+                            role="tabpanel"
+                            id="gotcha-panel-scale"
+                            aria-labelledby="gotcha-tab-scale"
+                            hidden
+                        >
+                            <h3>Not built for massive libraries</h3>
+                            <p>
+                                GistKeep rewrites its managed files when you
+                                save changes. That works well for normal
+                                personal collections, but large bookmark
+                                libraries will get slower over time. This is a
+                                deliberate tradeoff in exchange for a simple,
+                                inspectable storage model. If you expect tens of
+                                thousands of items or constant heavy writes, a
+                                more traditional database-backed tool will be a
+                                better fit.
+                            </p>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <section class="bottom-cta">
+                <div class="page-shell">
+                    <div class="bottom-cta-card">
+                        <div class="bottom-cta-actions">
+                            <a class="button button-xl" href="./app.html"
+                                >Try GistKeep</a
+                            >
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <div class="page-shell footer-card">
+                <div>
+                    <h2>GistKeep</h2>
+                    <p>Open source bookmarks and notes.</p>
+                </div>
+
+                <form
+                    class="footer-signup"
+                    name="submit-to-google-sheet"
+                    id="emailSignupForm"
+                >
+                    <label class="footer-signup-label" for="signupEmail"
+                        >Signup for updates</label
+                    >
+                    <div class="footer-signup-row">
+                        <input
+                            class="footer-input"
+                            id="signupEmail"
+                            name="email"
+                            type="email"
+                            placeholder="you@example.com"
+                            autocomplete="email"
+                            required
+                        />
+                        <label class="signup-honeypot" for="signupWebsite"
+                            >Leave this field empty</label
+                        >
+                        <input
+                            class="signup-honeypot"
+                            id="signupWebsite"
+                            name="website"
+                            type="text"
+                            tabindex="-1"
+                            autocomplete="off"
+                        />
+                        <button class="button" type="submit">Sign Up</button>
+                    </div>
+                </form>
+            </div>
+        </footer>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/js/all.min.js"
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        ></script>
+        <script src="https://unpkg.com/lucide@latest"></script>
+        <script>
+            (function () {
+                var googleSheetsScriptURL =
+                    "https://script.google.com/macros/s/AKfycbzElpZHioTIhYV8S7pu57ZHfvzbtw7MTrAoxlES64ZdgOtgXdAmPdCE-YxIs_iCmyUe/exec";
+                var storageKey = "gistkeep-landing-theme";
+                var root = document.documentElement;
+                var toggle = document.getElementById("themeToggle");
+                var signupForm = document.forms["submit-to-google-sheet"];
+                var signupStatus = document.getElementById("signupStatus");
+                var media = window.matchMedia
+                    ? window.matchMedia("(prefers-color-scheme: dark)")
+                    : null;
+
+                function applyTheme(theme, persist) {
+                    root.setAttribute("data-theme", theme);
+                    if (toggle) {
+                        toggle.setAttribute(
+                            "aria-pressed",
+                            String(theme === "dark"),
+                        );
+                        toggle.setAttribute(
+                            "title",
+                            theme === "dark"
+                                ? "Switch to light theme"
+                                : "Switch to dark theme",
+                        );
+                    }
+
+                    if (persist) {
+                        try {
+                            localStorage.setItem(storageKey, theme);
+                        } catch (e) {}
+                    }
+                }
+
+                if (toggle) {
+                    toggle.addEventListener("click", function () {
+                        var currentTheme =
+                            root.getAttribute("data-theme") || "light";
+                        var nextTheme =
+                            currentTheme === "dark" ? "light" : "dark";
+                        applyTheme(nextTheme, true);
+                    });
+                }
+
+                if (media) {
+                    media.addEventListener("change", function (event) {
+                        var storedTheme = null;
+                        try {
+                            storedTheme = localStorage.getItem(storageKey);
+                        } catch (e) {}
+
+                        if (!storedTheme) {
+                            applyTheme(event.matches ? "dark" : "light", false);
+                        }
+                    });
+                }
+
+                var gotchaTabs = Array.prototype.slice.call(
+                    document.querySelectorAll("[data-gotcha-tab]"),
+                );
+                var gotchaPanels = Array.prototype.slice.call(
+                    document.querySelectorAll(".gotcha-panel"),
+                );
+
+                function activateGotchaTab(tab) {
+                    var target = tab.getAttribute("aria-controls");
+
+                    gotchaTabs.forEach(function (item) {
+                        var isActive = item === tab;
+                        item.classList.toggle("is-active", isActive);
+                        item.setAttribute("aria-selected", String(isActive));
+                        item.tabIndex = isActive ? 0 : -1;
+                    });
+
+                    gotchaPanels.forEach(function (panel) {
+                        var isActive = panel.id === target;
+                        panel.classList.toggle("is-active", isActive);
+                        panel.hidden = !isActive;
+                    });
+                }
+
+                gotchaTabs.forEach(function (tab, index) {
+                    tab.addEventListener("click", function () {
+                        activateGotchaTab(tab);
+                    });
+
+                    tab.addEventListener("keydown", function (event) {
+                        if (
+                            event.key !== "ArrowRight" &&
+                            event.key !== "ArrowLeft" &&
+                            event.key !== "Home" &&
+                            event.key !== "End"
+                        ) {
+                            return;
+                        }
+
+                        event.preventDefault();
+
+                        var nextIndex = index;
+                        if (event.key === "ArrowRight") {
+                            nextIndex = (index + 1) % gotchaTabs.length;
+                        } else if (event.key === "ArrowLeft") {
+                            nextIndex =
+                                (index - 1 + gotchaTabs.length) %
+                                gotchaTabs.length;
+                        } else if (event.key === "Home") {
+                            nextIndex = 0;
+                        } else if (event.key === "End") {
+                            nextIndex = gotchaTabs.length - 1;
+                        }
+
+                        gotchaTabs[nextIndex].focus();
+                        activateGotchaTab(gotchaTabs[nextIndex]);
+                    });
+                });
+
+                if (signupForm) {
+                    signupForm.addEventListener("submit", function (event) {
+                        event.preventDefault();
+
+                        var emailInput = signupForm.querySelector(
+                            'input[name="email"]',
+                        );
+                        var honeypotInput = signupForm.querySelector(
+                            'input[name="website"]',
+                        );
+                        var rawEmail = emailInput ? emailInput.value : "";
+                        var normalizedEmail = rawEmail.trim().toLowerCase();
+                        var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+                        if (honeypotInput && honeypotInput.value.trim()) {
+                            if (signupStatus) {
+                                signupStatus.textContent =
+                                    "Thanks. You’re on the list.";
+                            }
+                            signupForm.reset();
+                            return;
+                        }
+
+                        if (
+                            !normalizedEmail ||
+                            normalizedEmail.length > 160 ||
+                            !emailPattern.test(normalizedEmail)
+                        ) {
+                            if (signupStatus) {
+                                signupStatus.textContent =
+                                    "Enter a valid email address to sign up.";
+                            }
+                            if (emailInput) {
+                                emailInput.focus();
+                            }
+                            return;
+                        }
+
+                        if (emailInput) {
+                            emailInput.value = normalizedEmail;
+                        }
+
+                        if (
+                            !googleSheetsScriptURL ||
+                            googleSheetsScriptURL === "<SCRIPT URL>"
+                        ) {
+                            if (signupStatus) {
+                                signupStatus.textContent =
+                                    "Set your Google Apps Script URL in index.html to enable signup.";
+                            }
+                            return;
+                        }
+
+                        var submitButton = signupForm.querySelector(
+                            'button[type="submit"]',
+                        );
+                        var previousLabel = submitButton
+                            ? submitButton.textContent
+                            : "";
+
+                        if (submitButton) {
+                            submitButton.disabled = true;
+                            submitButton.textContent = "Sending...";
+                        }
+
+                        if (signupStatus) {
+                            signupStatus.textContent =
+                                "Submitting your signup...";
+                        }
+
+                        fetch(googleSheetsScriptURL, {
+                            method: "POST",
+                            body: new FormData(signupForm),
+                        })
+                            .then(function (response) {
+                                if (!response.ok) {
+                                    throw new Error("Signup request failed");
+                                }
+                                signupForm.reset();
+                                if (submitButton) {
+                                    submitButton.textContent = "Subscribed!";
+                                }
+                                if (signupStatus) {
+                                    signupStatus.textContent =
+                                        "Thanks. You’re on the list.";
+                                }
+                            })
+                            .catch(function () {
+                                if (signupStatus) {
+                                    signupStatus.textContent =
+                                        "Signup failed. Try again in a moment.";
+                                }
+                            })
+                            .finally(function () {
+                                if (submitButton) {
+                                    submitButton.disabled = false;
+                                    submitButton.textContent = previousLabel;
+                                }
+                            });
+                    });
+                }
+
+                applyTheme(root.getAttribute("data-theme") || "light", false);
+
+                if (window.lucide) {
+                    window.lucide.createIcons();
+                }
+            })();
+        </script>
+
+        <!-- Google tag (gtag.js) -->
+        <script
+            async
+            src="https://www.googletagmanager.com/gtag/js?id=G-X68E7YM8CT"
+        ></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+
+            gtag("config", "G-X68E7YM8CT");
+        </script>
+    </body>
+</html>

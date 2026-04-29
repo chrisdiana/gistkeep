@@ -2,7 +2,7 @@
 
 > GistKeep is an open source bookmark and notes app that stores your library in your own GitHub Gist.
 
-Fully client-side with no app-owned backend or hosted database. Your bookmarks and notes live in Markdown in your own Github Gist, which makes them portable, inspectable, versioned, and easy to back up. [Try it here](https://chrisdiana.github.io/gistkeep/app.html)
+Fully client-side web app with no app-owned backend or hosted database. Your bookmarks and notes live in Markdown in your own Github Gist, which makes them portable, inspectable, versioned, and easy to back up. [Try it here](https://chrisdiana.github.io/gistkeep/app.html)
 
 <p align="center">
   <a href="https://chrisdiana.github.io/gistkeep/">

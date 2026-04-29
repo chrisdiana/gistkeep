@@ -15,9 +15,7 @@ Fully client-side with no app-owned backend or hosted database. Your bookmarks a
 - Plain Markdown storage
 - Built-in bookmarklet for saving links from anywhere
 - Categories, tags, search, and notes
-- Full-text search across saved data
 - Theme support
-- Inline note editing
 - Optional content encryption
 
 ## How It Works

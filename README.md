@@ -105,17 +105,6 @@ For normal personal collections, these tradeoffs are often worth it. For very la
 
 GistKeep is intended to be easy to inspect, self-host, and modify. It is a plain static app with no framework or build pipeline required.
 
-## Contributing
-
-Contributions are welcome.
-
-If you want to contribute:
-
-1. Open an issue or start a discussion for bugs, UX changes, or larger ideas
-2. Keep changes focused and easy to review
-3. Test the affected flow locally by serving the app and checking `app.html`
-4. If you change storage behavior, bookmarklet behavior, or security-related logic, include clear notes in your PR
-
 ## License
 
 See [LICENSE](./LICENSE).
